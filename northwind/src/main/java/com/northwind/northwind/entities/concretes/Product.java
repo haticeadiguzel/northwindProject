@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //how id will increase
     @Column(name = "product_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //how id will increase
     private int id; //smallint
 
-    @Column(name = "category_id")
-    private int categoryId; //smallint
+    //@Column(name = "category_id")
+    //private int categoryId; //smallint
 
     @Column(name = "product_name")
     private String productName; //character varying (40)
@@ -30,4 +30,8 @@ public class Product {
 
     @Column(name = "quantity_per_unit")
     private String quantityPerUnit; ///character varying (20)
+
+    @ManyToOne()
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
