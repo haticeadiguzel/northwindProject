@@ -7,6 +7,7 @@ import com.northwind.northwind.core.utilities.results.SuccessDataResult;
 import com.northwind.northwind.core.utilities.results.SuccessResult;
 import com.northwind.northwind.dataAccess.abstracts.ProductRepository;
 import com.northwind.northwind.entities.concretes.Product;
+import com.northwind.northwind.entities.dtos.ProductWithCategoryResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class ProductManager implements ProductService {
     private ProductRepository productRepository;
 
@@ -93,5 +94,10 @@ public class ProductManager implements ProductService {
     @Override
     public DataResult<List<Product>> getByNameAndCategory(String productName, int categoryId) {
         return new SuccessDataResult<List<Product>>(productRepository.getByNameAndCategory(productName, categoryId), "Products listed.");
+    }
+
+    @Override
+    public DataResult<List<ProductWithCategoryResponse>> getProductWithCategoryResponseDetails() {
+        return new SuccessDataResult<List<ProductWithCategoryResponse>>(productRepository.getProductWithCategoryResponseDetails(), "Data listed.");
     }
 }

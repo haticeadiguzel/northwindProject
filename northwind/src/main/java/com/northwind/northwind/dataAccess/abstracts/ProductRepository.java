@@ -1,6 +1,7 @@
 package com.northwind.northwind.dataAccess.abstracts;
 
 import com.northwind.northwind.entities.concretes.Product;
+import com.northwind.northwind.entities.dtos.ProductWithCategoryResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     //:, ? gibi ifadeler parametredir.
     @Query("SELECT p FROM Product p WHERE p.productName = :productName AND p.category.id = :categoryId")
     List<Product> getByNameAndCategory(String productName, int categoryId);
-
+    @Query("SELECT new com.northwind.northwind.entities.dtos.ProductWithCategoryResponse(p.id, p.productName, c.categoryName) From Category c Inner Join c.products p")
+    List<ProductWithCategoryResponse> getProductWithCategoryResponseDetails();
 }

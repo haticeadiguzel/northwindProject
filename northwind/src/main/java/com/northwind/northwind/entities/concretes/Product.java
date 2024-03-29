@@ -16,9 +16,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //how id will increase
     private int id; //smallint
 
-    //@Column(name = "category_id")
-    //private int categoryId; //smallint
-
     @Column(name = "product_name")
     private String productName; //character varying (40)
 
