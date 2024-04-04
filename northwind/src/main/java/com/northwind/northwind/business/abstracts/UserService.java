@@ -6,5 +6,6 @@ import com.northwind.northwind.core.utilities.results.Result;
 
 public interface UserService {
     Result add(User user);
+
     DataResult<User> getByEmail(String email);
 }

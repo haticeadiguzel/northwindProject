@@ -3,8 +3,11 @@ package com.northwind.northwind.api.controllers;
 import com.northwind.northwind.business.abstracts.ProductService;
 import com.northwind.northwind.core.utilities.results.DataResult;
 import com.northwind.northwind.core.utilities.results.Result;
-import com.northwind.northwind.entities.concretes.Product;
 import com.northwind.northwind.entities.dtos.ProductWithCategoryResponse;
+import com.northwind.northwind.entities.dtos.requests.CreateProductRequest;
+import com.northwind.northwind.entities.dtos.requests.UpdateProductRequest;
+import com.northwind.northwind.entities.dtos.responses.GetAllProductsResponse;
+import com.northwind.northwind.entities.dtos.responses.GetByProductResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,72 +21,72 @@ public class ProductsController {
     private ProductService productService;
 
     @GetMapping("/getall")
-    public DataResult<List<Product>> getAll(){
+    public DataResult<List<GetAllProductsResponse>> getAll() {
         return productService.getAll();
     }
 
     @GetMapping("/getAllSorted")
-    DataResult<List<Product>> getAllSorted(@RequestParam String typeOfSort) {
+    DataResult<List<GetAllProductsResponse>> getAllSorted(@RequestParam String typeOfSort) {
         return productService.getAllSorted(typeOfSort);
     }
 
     @GetMapping("/getAllByPage")
-    DataResult<List<Product>> getAll(int pageNo, int pageSize) {
+    DataResult<List<GetAllProductsResponse>> getAll(int pageNo, int pageSize) {
         return productService.getAll(pageNo - 1, pageSize);
     }
 
-    @GetMapping("/getById/{id}")
-    public Result getById(@PathVariable int id) {
+    @GetMapping("/getById")
+    public Result getById(@RequestParam int id) {
         return productService.getById(id);
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody Product product) {
-        return productService.add(product);
+    public Result add(@RequestBody CreateProductRequest createProductRequest) {
+        return productService.add(createProductRequest);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public Result delete(@PathVariable int id) {
+    @DeleteMapping("/delete")
+    public Result delete(@RequestParam int id) {
         return productService.delete(id);
     }
 
     @PutMapping("/update")
-    public Result update(@RequestBody Product product) {
-        return productService.update(product);
+    public Result update(@RequestBody UpdateProductRequest updateProductRequest) {
+        return productService.update(updateProductRequest);
     }
 
     @GetMapping("/getByProductName")
-    public DataResult<Product> getByProductName(@RequestParam String productName) {
+    public DataResult<GetByProductResponse> getByProductName(@RequestParam String productName) {
         return productService.getByProductName(productName);
     }
 
     @GetMapping("/getByProductNameAndCategoryId")
-    public DataResult<Product> getByProductNameAndCategoryId(@RequestParam String productName, int categoryId) {
+    public DataResult<GetByProductResponse> getByProductNameAndCategoryId(@RequestParam String productName, int categoryId) {
         return productService.getByProductNameAndCategoryId(productName, categoryId);
     }
 
     @GetMapping("/getByProductNameOrCategoryId")
-    public DataResult<List<Product>> getByProductNameOrCategoryId(@RequestParam String productName, int categoryId) {
+    public DataResult<List<GetByProductResponse>> getByProductNameOrCategoryId(@RequestParam String productName, int categoryId) {
         return productService.getByProductNameOrCategoryId(productName, categoryId);
     }
 
     @GetMapping("/getByCategoryIdIn")
-    public DataResult<List<Product>> getByCategoryIdIn(@RequestParam  List<Integer> categories) {
+    public DataResult<List<GetByProductResponse>> getByCategoryIdIn(@RequestParam List<Integer> categories) {
         return productService.getByCategoryIdIn(categories);
     }
 
     @GetMapping("/getByProductNameContains")
-    public DataResult<List<Product>> getByProductNameContains(@RequestParam  String productName) {
+    public DataResult<List<GetByProductResponse>> getByProductNameContains(@RequestParam String productName) {
         return productService.getByProductNameContains(productName);
     }
 
     @GetMapping("/getByProductNameStartsWith")
-    public DataResult<List<Product>> getByProductNameStartsWith(@RequestParam  String productName) {
+    public DataResult<List<GetByProductResponse>> getByProductNameStartsWith(@RequestParam String productName) {
         return productService.getByProductNameStartsWith(productName);
     }
 
     @GetMapping("/getByNameAndCategory")
-    public DataResult<List<Product>> getByNameAndCategory(@RequestParam String productName, int categoryId) {
+    public DataResult<List<GetByProductResponse>> getByNameAndCategory(@RequestParam String productName, int categoryId) {
         return productService.getByNameAndCategory(productName, categoryId);
     }
 
