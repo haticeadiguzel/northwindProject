@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateProductRequest {
-    private int id;
     private String productName;
     private double unitPrice;
     private short unitsInStock;

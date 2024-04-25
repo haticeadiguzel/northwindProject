@@ -9,11 +9,13 @@ import com.northwind.northwind.entities.dtos.requests.UpdateProductRequest;
 import com.northwind.northwind.entities.dtos.responses.GetAllProductsResponse;
 import com.northwind.northwind.entities.dtos.responses.GetByProductResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/products")
@@ -21,8 +23,9 @@ public class ProductsController {
     private ProductService productService;
 
     @GetMapping("/getall")
-    public DataResult<List<GetAllProductsResponse>> getAll() {
-        return productService.getAll();
+    public ResponseEntity<DataResult<List<GetAllProductsResponse>>> getAll() {
+        DataResult<List<GetAllProductsResponse>> dataResult = productService.getAll();
+        return ResponseEntity.ok(dataResult);
     }
 
     @GetMapping("/getAllSorted")
@@ -36,28 +39,37 @@ public class ProductsController {
     }
 
     @GetMapping("/getById")
-    public Result getById(@RequestParam int id) {
-        return productService.getById(id);
+    public ResponseEntity<Result> getById(@RequestParam int id) {
+        Result result = productService.getById(id);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody CreateProductRequest createProductRequest) {
-        return productService.add(createProductRequest);
+    public ResponseEntity<Result> add(@RequestBody CreateProductRequest createProductRequest) {
+        Result result = productService.add(createProductRequest);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete")
-    public Result delete(@RequestParam int id) {
-        return productService.delete(id);
+    public ResponseEntity<Result> delete(@RequestParam int id) {
+        Result result = productService.delete(id);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("/update")
-    public Result update(@RequestBody UpdateProductRequest updateProductRequest) {
-        return productService.update(updateProductRequest);
+    public ResponseEntity<Result> update(int id, @RequestBody UpdateProductRequest updateProductRequest) {
+        Result result = productService.update(id, updateProductRequest);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/getByProductName")
     public DataResult<GetByProductResponse> getByProductName(@RequestParam String productName) {
         return productService.getByProductName(productName);
+    }
+
+    @GetMapping("/getByCategoryName")
+    public DataResult<List<GetByProductResponse>> getByCategoryCategoryName(@RequestParam String categoryName) {
+        return productService.getByCategoryCategoryName(categoryName);
     }
 
     @GetMapping("/getByProductNameAndCategoryId")

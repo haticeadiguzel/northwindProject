@@ -23,9 +23,11 @@ public interface ProductService {
 
     Result delete(int id);
 
-    Result update(UpdateProductRequest updateProductRequest);
+    Result update(int id, UpdateProductRequest updateProductRequest);
 
     DataResult<GetByProductResponse> getByProductName(String productName);
+
+    DataResult<List<GetByProductResponse>> getByCategoryCategoryName(String categoryName);
 
     DataResult<GetByProductResponse> getByProductNameAndCategoryId(String productName, int categoryId);
 

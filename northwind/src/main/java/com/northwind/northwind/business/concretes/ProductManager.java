@@ -14,6 +14,7 @@ import com.northwind.northwind.entities.dtos.requests.UpdateProductRequest;
 import com.northwind.northwind.entities.dtos.responses.GetAllProductsResponse;
 import com.northwind.northwind.entities.dtos.responses.GetByIdProductResponse;
 import com.northwind.northwind.entities.dtos.responses.GetByProductResponse;
+import com.northwind.northwind.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +49,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public DataResult<List<GetAllProductsResponse>> getAll(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("id").ascending());
         List<Product> products = productRepository.findAll(pageable).getContent();
         List<GetAllProductsResponse> productResponses = products.stream().map(product -> modelMapperService.forResponse().map(product, GetAllProductsResponse.class)).collect(Collectors.toList());
 
@@ -57,7 +58,9 @@ public class ProductManager implements ProductService {
 
     @Override
     public Result getById(int id) {
-        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Product is not exists with given id: " + id)
+        );
         GetByIdProductResponse getByIdProductResponse = modelMapperService.forResponse().map(product, GetByIdProductResponse.class);
 
         return new SuccessDataResult<GetByIdProductResponse>(getByIdProductResponse, "Product listed.");
@@ -73,14 +76,23 @@ public class ProductManager implements ProductService {
 
     @Override
     public Result delete(int id) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Product is not exists with given id: " + id)
+        );
+
         productRepository.deleteById(id);
 
         return new SuccessResult("Product deleted.");
     }
 
     @Override
-    public Result update(UpdateProductRequest updateProductRequest) {
+    public Result update(int id, UpdateProductRequest updateProductRequest) {
+        Product productId = productRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Product is not exists with given id: " + id)
+        );
+
         Product product = modelMapperService.forRequest().map(updateProductRequest, Product.class);
+        product.setId(id);
         productRepository.save(product);
 
         return new SuccessResult("Product updated.");
@@ -92,6 +104,14 @@ public class ProductManager implements ProductService {
         GetByProductResponse getByProductResponse = modelMapperService.forResponse().map(product, GetByProductResponse.class);
 
         return new SuccessDataResult<GetByProductResponse>(getByProductResponse, "Product listed.");
+    }
+
+    @Override
+    public DataResult<List<GetByProductResponse>> getByCategoryCategoryName(String categoryName) {
+        List<Product> products = productRepository.getByCategoryCategoryName(categoryName);
+        List<GetByProductResponse> productResponses = products.stream().map(product -> modelMapperService.forResponse().map(product, GetByProductResponse.class)).collect(Collectors.toList());
+
+        return new SuccessDataResult<List<GetByProductResponse>>(productResponses, "Products listed.");
     }
 
     @Override
